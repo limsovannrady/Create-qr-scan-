@@ -18,9 +18,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
         f'<tg-emoji emoji-id="5472055112702629499">👋</tg-emoji> សួស្តី {last_name}\n\n'
         "<b>ខ្ញុំជា QR Code Bot</b>\n\n"
+        "<blockquote>"
         '<tg-emoji emoji-id="5471978009449731768">👉</tg-emoji>មុខងារ\n'
         "• ផ្ញើ Text / Link → បង្កើត QR Code\n\n"
         "• ផ្ញើរូបភាព QR → Bot នឹងស្កេនកូដ QR"
+        "</blockquote>"
     )
     await update.message.reply_text(text, parse_mode="HTML", do_quote=True)
 
