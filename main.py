@@ -14,12 +14,12 @@ logging.basicConfig(
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    last_name = update.effective_user.last_name or ""
     text = (
-        "សួស្តី 👋\n\n"
+        f"👋 សួស្តី {last_name}\n\n"
         "ខ្ញុំជា QR Code Bot\n\n"
-        "📌 មុខងារ\n"
         "• ផ្ញើ Text / Link → បង្កើត QR Code\n"
-        "• ផ្ញើរូបភាព QR → Decode QR Code"
+        "• ផ្ញើរូបភាព QR → Bot នឹងស្កេនកូដ QR"
     )
     await update.message.reply_text(text, do_quote=True)
 
