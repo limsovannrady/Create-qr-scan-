@@ -1,7 +1,8 @@
 import os
-import asyncio
+import time
+import json
 import logging
-from telegram import Bot
+import urllib.request
 from telegram.ext import ApplicationBuilder
 from db import init_db
 from bot_handlers import register_handlers
@@ -14,10 +15,20 @@ logging.basicConfig(
 )
 
 
-async def delete_webhook(token):
-    bot = Bot(token=token)
-    async with bot:
-        await bot.delete_webhook(drop_pending_updates=True)
+def delete_webhook_sync(token):
+    url = f"https://api.telegram.org/bot{token}/deleteWebhook"
+    try:
+        payload = json.dumps({"drop_pending_updates": True}).encode("utf-8")
+        req = urllib.request.Request(url, data=payload,
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read())
+        if data.get("ok"):
+            print("Webhook deleted successfully.")
+        else:
+            print(f"deleteWebhook response: {data}")
+    except Exception as e:
+        print(f"Warning: could not delete webhook: {e}")
 
 
 def main():
@@ -27,13 +38,15 @@ def main():
 
     init_db()
 
-    asyncio.run(delete_webhook(TOKEN))
+    print("Deleting any active webhook...")
+    delete_webhook_sync(TOKEN)
+    time.sleep(3)
 
     app = ApplicationBuilder().token(TOKEN).build()
     register_handlers(app)
 
     print("Bot Running...")
-    app.run_polling()
+    app.run_polling(drop_pending_updates=True)
 
 
 if __name__ == "__main__":
