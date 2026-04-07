@@ -217,9 +217,17 @@
 <script>
   const SECRET = "{{ secret }}";
 
+  const DISPLAY = {
+    "screen-loading":    "flex",
+    "screen-notelegram": "flex",
+    "screen-denied":     "flex",
+    "dashboard":         "block"
+  };
+
   function show(id) {
-    ["screen-loading","screen-notelegram","screen-denied","dashboard"]
-      .forEach(s => document.getElementById(s).style.display = s === id ? "" : "none");
+    Object.keys(DISPLAY).forEach(s => {
+      document.getElementById(s).style.display = s === id ? DISPLAY[s] : "none";
+    });
   }
 
   async function authenticate() {
