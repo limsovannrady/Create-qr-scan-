@@ -5,6 +5,11 @@ class handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         pass
 
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
     def do_GET(self):
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
