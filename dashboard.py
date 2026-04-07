@@ -1,13 +1,18 @@
 import os
+import sys
 import hmac
 import hashlib
 import json
 from functools import wraps
 from urllib.parse import parse_qsl
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
+
 from flask import Flask, render_template, jsonify, request, session
 from db import init_db, get_stats, get_recent_activities, get_users
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(BASE_DIR, "templates"))
 
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 ADMIN_ID = 5002402843
