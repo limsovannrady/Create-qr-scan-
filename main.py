@@ -21,7 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• ផ្ញើ Text / Link → បង្កើត QR Code\n"
         "• ផ្ញើរូបភាព QR → Decode QR Code"
     )
-    await update.message.reply_text(text)
+    await update.message.reply_text(text, do_quote=True)
 
 
 async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -32,7 +32,7 @@ async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
     img.save(file_path)
 
     with open(file_path, "rb") as f:
-        await update.message.reply_photo(photo=f)
+        await update.message.reply_photo(photo=f, do_quote=True)
 
 
 async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -50,12 +50,12 @@ async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         data = result.stdout.strip()
         if data:
-            await update.message.reply_text(f"📌 QR Content:\n{data}")
+            await update.message.reply_text(data, do_quote=True)
         else:
-            await update.message.reply_text("❌ មិនអាចអាន QR បានទេ")
+            await update.message.reply_text("❌ មិនអាចអាន QR បានទេ", do_quote=True)
     except Exception as e:
         logging.error(f"Decode error: {e}")
-        await update.message.reply_text("❌ មិនអាចអាន QR បានទេ")
+        await update.message.reply_text("❌ មិនអាចអាន QR បានទេ", do_quote=True)
 
 
 def main():
