@@ -36,3 +36,6 @@ externalPort = 80
 [userenv]
 
 [userenv.shared]
+
+[userenv.development]
+DB_PATH = "/home/runner/workspace/bot_data.db"

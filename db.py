@@ -2,7 +2,7 @@ import os
 import sqlite3
 from datetime import datetime
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bot_data.db")
+DB_PATH = os.environ.get("DB_PATH", "/tmp/bot_data.db")
 
 
 def get_conn():

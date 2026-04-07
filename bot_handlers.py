@@ -1,6 +1,7 @@
 import logging
-import subprocess
 import qrcode
+import zxingcpp
+from PIL import Image
 from telegram import Update
 from telegram.constants import ChatAction
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -49,14 +50,10 @@ async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await photo.download_to_drive(file_path)
 
     try:
-        result = subprocess.run(
-            ["zbarimg", "--raw", "-q", file_path],
-            capture_output=True,
-            text=True,
-            timeout=10
-        )
-        data = result.stdout.strip()
-        if data:
+        img = Image.open(file_path)
+        results = zxingcpp.read_barcodes(img)
+        if results:
+            data = results[0].text
             log_activity(user, "ស្កេន QR Code", data[:80])
             await update.message.reply_text(data, do_quote=True)
         else:
