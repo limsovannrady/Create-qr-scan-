@@ -11,9 +11,11 @@ app = Flask(__name__)
 
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 ADMIN_ID = 5002402843
-DASHBOARD_SECRET = os.environ.get("DASHBOARD_SECRET", "")
+DASHBOARD_SECRET = os.environ.get("DASHBOARD_SECRET", "changeme-set-env-var")
 
-app.secret_key = DASHBOARD_SECRET
+app.secret_key = DASHBOARD_SECRET or "fallback-secret-key"
+
+init_db()
 
 
 def validate_telegram_init_data(init_data: str) -> dict | None:
@@ -111,5 +113,4 @@ def api_users():
 
 
 if __name__ == "__main__":
-    init_db()
     app.run(host="0.0.0.0", port=5000, debug=False)
