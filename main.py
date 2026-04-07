@@ -32,10 +32,7 @@ async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
     img.save(file_path)
 
     with open(file_path, "rb") as f:
-        await update.message.reply_photo(
-            photo=f,
-            caption="នេះគឺជា QR Code របស់អ្នក"
-        )
+        await update.message.reply_photo(photo=f)
 
 
 async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
