@@ -3,6 +3,7 @@ import logging
 import subprocess
 import qrcode
 from telegram import Update
+from telegram.constants import ChatAction
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from db import init_db, log_activity
 
@@ -15,6 +16,7 @@ logging.basicConfig(
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     user = update.effective_user
     last_name = user.last_name or ""
     log_activity(user, "បើក Bot", "/start")
@@ -31,6 +33,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     user = update.effective_user
     text = update.message.text
     log_activity(user, "បង្កើត QR Code", text[:80] if text else "")
@@ -44,6 +47,7 @@ async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     user = update.effective_user
     photo = await update.message.photo[-1].get_file()
 
