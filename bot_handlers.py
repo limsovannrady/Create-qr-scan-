@@ -1,11 +1,16 @@
 import logging
 import qrcode
-import zxingcpp
-from PIL import Image as PILImage
 from telegram import Update
 from telegram.constants import ChatAction
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from db import log_activity
+
+try:
+    import zxingcpp
+    from PIL import Image as PILImage
+    ZXING_AVAILABLE = True
+except ImportError:
+    ZXING_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +53,11 @@ async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     file_path = "/tmp/qr_input.png"
     await photo.download_to_drive(file_path)
+
+    if not ZXING_AVAILABLE:
+        log_activity(user, "ស្កេន QR Code", "Library unavailable")
+        await update.message.reply_text("❌ មុខងារស្កេន QR មិនទាន់ដំណើរការនៅ server នេះទេ", do_quote=True)
+        return
 
     try:
         img = PILImage.open(file_path)
