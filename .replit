@@ -52,4 +52,3 @@ externalPort = 80
 [userenv]
 
 [userenv.shared]
-DASHBOARD_SECRET = "2b6957011b3ac2fc6fe726c4b5e54e99b2104b40a429e6b1b6b35729c551fd21"
