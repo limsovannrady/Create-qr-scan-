@@ -16,13 +16,13 @@ logging.basicConfig(
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     last_name = update.effective_user.last_name or ""
     text = (
-        f"👋 សួស្តី {last_name}\n\n"
-        "ខ្ញុំជា QR Code Bot\n\n"
-        "👉មុខងារ\n"
+        f'<tg-emoji emoji-id="5472055112702629499">👋</tg-emoji> សួស្តី {last_name}\n\n'
+        "<b>ខ្ញុំជា QR Code Bot</b>\n\n"
+        '<tg-emoji emoji-id="5471978009449731768">👉</tg-emoji>មុខងារ\n'
         "• ផ្ញើ Text / Link → បង្កើត QR Code\n\n"
         "• ផ្ញើរូបភាព QR → Bot នឹងស្កេនកូដ QR"
     )
-    await update.message.reply_text(text, do_quote=True)
+    await update.message.reply_text(text, parse_mode="HTML", do_quote=True)
 
 
 async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
