@@ -18,7 +18,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
         f"👋 សួស្តី {last_name}\n\n"
         "ខ្ញុំជា QR Code Bot\n\n"
-        "• ផ្ញើ Text / Link → បង្កើត QR Code\n"
+        "👉មុខងារ\n"
+        "• ផ្ញើ Text / Link → បង្កើត QR Code\n\n"
         "• ផ្ញើរូបភាព QR → Bot នឹងស្កេនកូដ QR"
     )
     await update.message.reply_text(text, do_quote=True)
