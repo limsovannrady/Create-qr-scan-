@@ -1,0 +1,8 @@
+uv.lock
+pyproject.toml
+bot_data.db
+.pythonlibs
+__pycache__
+.cache
+.local
+.git
