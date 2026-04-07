@@ -4,6 +4,7 @@ import subprocess
 import qrcode
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+from db import init_db, log_activity
 
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 
@@ -14,7 +15,9 @@ logging.basicConfig(
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    last_name = update.effective_user.last_name or ""
+    user = update.effective_user
+    last_name = user.last_name or ""
+    log_activity(user, "បើក Bot", "/start")
     text = (
         f'<tg-emoji emoji-id="5472055112702629499">👋</tg-emoji> សួស្តី {last_name}\n\n'
         "<b>ខ្ញុំជា QR Code Bot</b>\n\n"
@@ -28,7 +31,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
     text = update.message.text
+    log_activity(user, "បង្កើត QR Code", text[:80] if text else "")
 
     img = qrcode.make(text)
     file_path = "/tmp/qr.png"
@@ -39,6 +44,7 @@ async def generate_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
     photo = await update.message.photo[-1].get_file()
 
     file_path = "/tmp/qr_input.png"
@@ -53,11 +59,14 @@ async def decode_qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         data = result.stdout.strip()
         if data:
+            log_activity(user, "ស្កេន QR Code", data[:80])
             await update.message.reply_text(data, do_quote=True)
         else:
+            log_activity(user, "ស្កេន QR Code", "មិនអាចអាន QR")
             await update.message.reply_text("❌ មិនអាចអាន QR បានទេ", do_quote=True)
     except Exception as e:
         logging.error(f"Decode error: {e}")
+        log_activity(user, "ស្កេន QR Code", "Error")
         await update.message.reply_text("❌ មិនអាចអាន QR បានទេ", do_quote=True)
 
 
@@ -65,6 +74,8 @@ def main():
     if not TOKEN:
         print("ERROR: TELEGRAM_BOT_TOKEN is not set!")
         return
+
+    init_db()
 
     app = ApplicationBuilder().token(TOKEN).build()
 
