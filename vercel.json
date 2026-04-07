@@ -7,9 +7,17 @@
       "config": {
         "includeFiles": ["db.py", "bot_handlers.py"]
       }
+    },
+    {
+      "src": "dashboard.py",
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": ["db.py", "templates/**"]
+      }
     }
   ],
   "routes": [
-    { "src": "/api/webhook", "dest": "/api/webhook.py" }
+    { "src": "/api/webhook", "dest": "/api/webhook.py" },
+    { "src": "/(.*)", "dest": "/dashboard.py" }
   ]
 }
