@@ -213,12 +213,15 @@
     if (!r.ok) return;
     const users = await r.json();
     const tb = document.getElementById("users-body");
-    tb.innerHTML = users.length ? users.map(u => `
-      <tr>
-        <td class="username">${u.username ? "@"+u.username : "—"}</td>
-        <td class="name-col">${[u.first_name,u.last_name].filter(Boolean).join(" ")||"—"}</td>
+    tb.innerHTML = users.length ? users.map(u => {
+      const name = [u.first_name, u.last_name].filter(Boolean).join(" ") || "—";
+      const uname = u.username ? `@${u.username}` : `<span style="color:#94a3b8">${name}</span>`;
+      return `<tr>
+        <td class="username">${uname}</td>
+        <td class="name-col">${name}</td>
         <td class="time">${fmt(u.last_seen)}</td>
-      </tr>`).join("") : '<tr><td colspan="3" class="empty">មិនទាន់មានទិន្នន័យ</td></tr>';
+      </tr>`;
+    }).join("") : '<tr><td colspan="3" class="empty">មិនទាន់មានទិន្នន័យ</td></tr>';
   }
 
   async function fetchActivities() {
@@ -226,13 +229,15 @@
     if (!r.ok) return;
     const acts = await r.json();
     const tb = document.getElementById("activity-body");
-    tb.innerHTML = acts.length ? acts.map(a => `
-      <tr>
-        <td class="username">${a.username ? "@"+a.username : a.full_name||"—"}</td>
+    tb.innerHTML = acts.length ? acts.map(a => {
+      const display = a.username ? `@${a.username}` : `<span style="color:#94a3b8">${a.full_name||"—"}</span>`;
+      return `<tr>
+        <td class="username">${display}</td>
         <td><span class="action-badge ${badgeClass(a.action)}">${a.action}</span></td>
-        <td class="detail" title="${a.detail}">${a.detail||"—"}</td>
+        <td class="detail" title="${a.detail||''}">${a.detail||"—"}</td>
         <td class="time">${fmt(a.timestamp)}</td>
-      </tr>`).join("") : '<tr><td colspan="4" class="empty">មិនទាន់មានទិន្នន័យ</td></tr>';
+      </tr>`;
+    }).join("") : '<tr><td colspan="4" class="empty">មិនទាន់មានទិន្នន័យ</td></tr>';
   }
 
   function updateClock() {
