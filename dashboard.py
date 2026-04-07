@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 ADMIN_ID = 5002402843
-DASHBOARD_SECRET = os.environ.get("DASHBOARD_SECRET", "changeme-set-env-var")
+DASHBOARD_SECRET = os.environ.get("DASHBOARD_SECRET", "")
 
 app.secret_key = DASHBOARD_SECRET or "fallback-secret-key"
 
@@ -67,9 +67,13 @@ def index():
 def api_auth():
     data = request.get_json(silent=True) or {}
 
-    secret = data.get("secret", "")
-    if not DASHBOARD_SECRET or secret != DASHBOARD_SECRET:
-        return jsonify({"ok": False, "error": "Invalid secret"}), 403
+    if DASHBOARD_SECRET:
+        secret = data.get("secret", "")
+        if secret != DASHBOARD_SECRET:
+            return jsonify({"ok": False, "error": "Invalid secret"}), 403
+
+    if not TOKEN:
+        return jsonify({"ok": False, "error": "Server not configured (missing bot token)"}), 500
 
     init_data = data.get("initData", "")
     params = validate_telegram_init_data(init_data)
